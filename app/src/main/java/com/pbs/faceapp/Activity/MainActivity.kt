@@ -111,6 +111,8 @@ class MainActivity : AppCompatActivity() {
                 @OptIn(ExperimentalGetImage::class)
                 override fun onCaptureSuccess(image: ImageProxy) {
                     super.onCaptureSuccess(image)
+                    cameraManager.cameraStop()
+                    Toast.makeText(this@MainActivity, "Processing....", Toast.LENGTH_SHORT).show()
                     val bitmap  = image.toBitmap()
                     detectFaces(bitmap)
                 }
@@ -148,11 +150,12 @@ class MainActivity : AppCompatActivity() {
                     faceResultList.add(FaceModal(faceNo,smileProbability ?: 1f,leftEye ?: 1f,rightEye ?: 1f))
                     faceNumber++
             }
-            Log.d("post","size : ${faceResultList.size}")
+
 
             val intent = Intent(this@MainActivity, PreviewActivity::class.java)
             intent.putParcelableArrayListExtra("faceList",ArrayList(faceResultList))
             startActivity(intent)
+            cameraManager.cameraStart()
         }
     }
 
